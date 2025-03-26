@@ -1,3 +1,11 @@
+import sys
+import typing
+import typing_extensions
+
+# Monkeypatch for typing.TypedDict issue in Python <3.12
+if sys.version_info < (3, 12):
+    typing.TypedDict = typing_extensions.TypedDict
+
 from pydantic_ai import Agent, RunContext
 from typing_extensions import TypedDict
 from pydantic_ai.common_tools.duckduckgo import duckduckgo_search_tool
