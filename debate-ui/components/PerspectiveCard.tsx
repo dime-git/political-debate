@@ -21,8 +21,8 @@ export default function PerspectiveCard({
   const [expanded, setExpanded] = useState(false);
 
   const colorClasses = {
-    red: 'bg-transparent border-red-300',
-    blue: 'bg-transparent border-blue-300',
+    red: 'bg-red-50 border-red-300',
+    blue: 'bg-blue-50 border-blue-300',
   };
 
   const headerClasses = {
