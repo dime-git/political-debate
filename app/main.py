@@ -20,7 +20,10 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",           # Local development
-        "https://your-frontend-domain.com"  # Replace with your actual frontend domain
+        "https://political-debate-nu.vercel.app",  # Replace with your actual frontend domain
+        "https://political-debate.vercel.app",  # Vercel domain
+        "https://political-debate-ai-agents.vercel.app",  # Alternative Vercel domain
+        "*"  # Temporarily allow all origins while testing
     ],  
     allow_credentials=True,
     allow_methods=["GET", "POST"],
