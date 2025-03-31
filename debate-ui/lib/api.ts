@@ -16,7 +16,7 @@ export interface DebateResponse {
 }
 
 // API URL from environment variable
-const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const apiUrl = 'http://localhost:8000';
 
 /**
  * Submit a new debate question to the API
@@ -27,26 +27,22 @@ export async function submitDebateQuestion(
   query: string
 ): Promise<DebateResponse> {
   try {
-    // Ensure apiUrl doesn't have trailing slash
-    const baseUrl = apiUrl.endsWith('/') ? apiUrl.slice(0, -1) : apiUrl;
-    const response = await fetch(
-      `${baseUrl}/debate?query=${encodeURIComponent(query.trim())}`,
-      {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-        },
-      }
-    );
+    // Using URLSearchParams to properly handle query parameters
+    const params = new URLSearchParams();
+    params.append('query', query);
+
+    const url = `${apiUrl}/debate?${params.toString()}`;
+    console.log(`Calling API at: ${url}`);
+
+    const response = await fetch(url);
 
     if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`API error: ${response.status} ${errorText}`);
+      throw new Error(`API error: ${response.status}`);
     }
 
     return response.json();
   } catch (error) {
-    console.error('Error submitting debate question:', error);
+    console.error('Error in submitDebateQuestion:', error);
     throw error;
   }
 }
