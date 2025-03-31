@@ -27,9 +27,17 @@ export async function submitDebateQuestion(
   query: string
 ): Promise<DebateResponse> {
   try {
-    // Simple URL construction that works both locally and in production
-    const encodedQuery = encodeURIComponent(query);
-    const response = await fetch(`${apiUrl}/debate?query=${encodedQuery}`);
+    // Ensure apiUrl doesn't have trailing slash
+    const baseUrl = apiUrl.endsWith('/') ? apiUrl.slice(0, -1) : apiUrl;
+    const response = await fetch(
+      `${baseUrl}/debate?query=${encodeURIComponent(query.trim())}`,
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+        },
+      }
+    );
 
     if (!response.ok) {
       const errorText = await response.text();
