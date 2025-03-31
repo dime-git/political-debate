@@ -45,7 +45,9 @@ class TableQuery:
         url = f"{self.client.url}/rest/v1/{self.table_name}"
         response = requests.post(url, headers=self.client.headers, json=data)
         response.raise_for_status()
-        return response.json()
+        result = response.json()
+        # Ensure consistent return format as a dict with 'data' key
+        return {"data": result, "error": None}
     
     def limit(self, count: int):
         self.limit_val = count
@@ -95,7 +97,13 @@ async def store_debate(query, right_response, left_response):
     }
     try:
         result = supabase.table("debates").insert(data)
-        return result["data"]
+        if isinstance(result, dict) and "data" in result:
+            return result["data"]
+        elif isinstance(result, list):
+            return result[0] if result else None
+        else:
+            print(f"Unexpected response format: {result}")
+            return result
     except Exception as e:
         print(f"Error storing debate: {e}")
         raise

@@ -50,9 +50,14 @@ async def add_right_wing_data(ctx: RunContext[str]) -> str:
 
 @right_wing_agent.tool
 async def right_wing_additional_data(ctx: RunContext[str]) -> str:  
-    result = await right_wing_researcher_agent.run("Here is the data for you search.", deps=ctx.deps)
-    print(result.data)
-    return result.data
+    try:
+        result = await right_wing_researcher_agent.run("Here is the data for you search.", deps=ctx.deps)
+        print(result.data)
+        return result.data
+    except Exception as e:
+        print(f"Error in right_wing_additional_data: {str(e)}")
+        # Return a fallback response when search fails
+        return f"I'll respond based on my existing knowledge as the search service is currently unavailable."
 
 @right_wing_researcher_agent.system_prompt
 async def add_right_wing_data(ctx: RunContext[str]) -> str:
@@ -97,9 +102,14 @@ async def add_left_wing_data(ctx: RunContext[str]) -> str:
 
 @left_wing_agent.tool
 async def left_wing_additional_data(ctx: RunContext[str]) -> str:  
-    result = await left_wing_researcher_agent.run("Here is the data for you search.", deps=ctx.deps)
-    print(result.data)
-    return result.data
+    try:
+        result = await left_wing_researcher_agent.run("Here is the data for you search.", deps=ctx.deps)
+        print(result.data)
+        return result.data
+    except Exception as e:
+        print(f"Error in left_wing_additional_data: {str(e)}")
+        # Return a fallback response when search fails
+        return f"I'll respond based on my existing knowledge as the search service is currently unavailable."
 
 @left_wing_researcher_agent.system_prompt
 async def add_left_wing_researcher_data(ctx: RunContext[str]) -> str:

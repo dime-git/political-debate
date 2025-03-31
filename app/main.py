@@ -18,12 +18,7 @@ app = FastAPI(
 # Add CORS middleware to allow requests from frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "https://political-debate-nu.vercel.app",
-        "https://political-debate.vercel.app",
-        "https://political-debate-ai-agents.vercel.app"
-    ],
+    allow_origins=["*"],  # Allow all origins for local development
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"]
