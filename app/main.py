@@ -20,9 +20,9 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
-        "https://political-debate-nu.vercel.app",  # Remove trailing slash
+        "https://political-debate-nu.vercel.app",
         "https://political-debate.vercel.app",
-        "https://political-debate-ai-agents.vercel.app",
+        "https://political-debate-ai-agents.vercel.app"
     ],
     allow_credentials=True,
     allow_methods=["*"],
