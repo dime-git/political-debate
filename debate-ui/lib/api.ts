@@ -26,16 +26,23 @@ const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 export async function submitDebateQuestion(
   query: string
 ): Promise<DebateResponse> {
-  const response = await fetch(
-    `${apiUrl}/debate?query=${encodeURIComponent(query)}`
-  );
+  try {
+    // Create URL object to properly handle encoding
+    const url = new URL(`${apiUrl}/debate`);
+    url.searchParams.append('query', query);
 
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`API error: ${response.status} ${errorText}`);
+    const response = await fetch(url.toString());
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`API error: ${response.status} ${errorText}`);
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error('Error submitting debate question:', error);
+    throw error;
   }
-
-  return response.json();
 }
 
 /**
