@@ -21,6 +21,11 @@ export default function Home() {
     setError(null);
 
     try {
+      console.log(
+        `Using API URL: ${
+          process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+        }`
+      );
       const response = await submitDebateQuestion(question);
 
       setCurrentDebate({
@@ -30,9 +35,32 @@ export default function Home() {
       });
     } catch (err) {
       console.error('Error submitting question:', err);
-      setError(
-        err instanceof Error ? err.message : 'An unknown error occurred'
-      );
+
+      // Create a more user-friendly error message
+      let errorMessage = 'An unknown error occurred';
+
+      if (err instanceof Error) {
+        if (
+          err.message.includes('Failed to fetch') ||
+          err.message.includes('NetworkError')
+        ) {
+          errorMessage =
+            'Network error: Cannot connect to the debate server. Please try again later.';
+        } else if (err.message.includes('API error: 500')) {
+          errorMessage =
+            'Server error: The debate service is experiencing issues. Please try again later.';
+        } else if (err.message.includes('API error: 429')) {
+          errorMessage =
+            'Rate limit exceeded: Please wait a moment before trying again.';
+        } else if (err.message.includes('API error: 404')) {
+          errorMessage =
+            'Not found: The debate service endpoint could not be found.';
+        } else {
+          errorMessage = err.message;
+        }
+      }
+
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }

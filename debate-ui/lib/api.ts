@@ -15,8 +15,8 @@ export interface DebateResponse {
   'Joe Biden thoughts 🧠: ': string;
 }
 
-// API URL from environment variable - hardcoded for local development
-const apiUrl = 'http://localhost:8000';
+// API URL from environment variable with fallback to local development
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 /**
  * Submit a new debate question to the API
@@ -34,20 +34,41 @@ export async function submitDebateQuestion(
     const url = `${apiUrl}/debate?${params.toString()}`;
     console.log(`Calling API at: ${url}`);
 
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      mode: 'cors', // Explicitly set CORS mode
-    });
+    // Create AbortController for timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
 
-    if (!response.ok) {
-      throw new Error(`API error: ${response.status} ${response.statusText}`);
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        mode: 'cors', // Explicitly set CORS mode
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        const errorText = await response
+          .text()
+          .catch(() => 'No error details available');
+        throw new Error(
+          `API error: ${response.status} ${response.statusText}. Details: ${errorText}`
+        );
+      }
+
+      return response.json();
+    } catch (fetchError: unknown) {
+      if (fetchError instanceof Error && fetchError.name === 'AbortError') {
+        throw new Error(
+          'Request timeout: The server took too long to respond.'
+        );
+      }
+      throw fetchError;
     }
-
-    return response.json();
   } catch (error) {
     console.error('Error in submitDebateQuestion:', error);
     throw error;
