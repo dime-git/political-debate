@@ -27,11 +27,9 @@ export async function submitDebateQuestion(
   query: string
 ): Promise<DebateResponse> {
   try {
-    // Create URL object to properly handle encoding
-    const url = new URL(`${apiUrl}/debate`);
-    url.searchParams.append('query', query);
-
-    const response = await fetch(url.toString());
+    // Simple URL construction that works both locally and in production
+    const encodedQuery = encodeURIComponent(query);
+    const response = await fetch(`${apiUrl}/debate?query=${encodedQuery}`);
 
     if (!response.ok) {
       const errorText = await response.text();
