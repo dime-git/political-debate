@@ -19,7 +19,7 @@ class DebateMessage(TypedDict):
 message_storage: list[DebateMessage] = []
 
 right_wing_agent = Agent(
-    model='gpt-4o',
+    model='gpt-4',
     deps_type=str,
     result_type=str,
     result_retries=3,
@@ -32,7 +32,7 @@ right_wing_agent = Agent(
 )
 
 right_wing_researcher_agent = Agent(
-    model='gpt-4o',
+    model='gpt-4',
     deps_type=str,
     result_type=str,
     result_retries=3,
