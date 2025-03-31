@@ -19,15 +19,15 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:3000",           # Local development
-        "https://political-debate-nu.vercel.app/",  # Replace with your actual frontend domain
-        "https://political-debate.vercel.app",  # Vercel domain
-        "https://political-debate-ai-agents.vercel.app",  # Alternative Vercel domain
-        "*"  # Temporarily allow all origins while testing
-    ],  
+        "http://localhost:3000",
+        "https://political-debate-nu.vercel.app",  # Remove trailing slash
+        "https://political-debate.vercel.app",
+        "https://political-debate-ai-agents.vercel.app",
+    ],
     allow_credentials=True,
-    allow_methods=["GET", "POST"],
+    allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"]
 )
 
 @app.get("/")
