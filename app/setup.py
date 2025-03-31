@@ -2,11 +2,28 @@
 import os
 from dotenv import load_dotenv
 import openai
+from pathlib import Path
 
 def setup_api_keys():
     """Load API keys from environment variables and configure clients"""
-    # Load environment variables from .env file
-    load_dotenv()
+    # Try multiple possible locations for .env file
+    possible_paths = [
+        Path(__file__).parent / '.env',  # app/.env
+        Path(__file__).parent.parent / '.env',  # root/.env
+        Path.cwd() / '.env'  # current directory/.env
+    ]
+    
+    env_loaded = False
+    for env_path in possible_paths:
+        print(f"Trying to load .env from: {env_path.absolute()}")
+        if env_path.exists():
+            print(f"Found .env file at: {env_path.absolute()}")
+            load_dotenv(env_path)
+            env_loaded = True
+            break
+    
+    if not env_loaded:
+        print("Warning: No .env file found, will try to use environment variables directly")
     
     # Get and verify OpenAI API key
     openai_api_key = os.environ.get("OPENAI_API_KEY")
@@ -20,7 +37,6 @@ def setup_api_keys():
     # Also set it in os.environ explicitly to be sure
     os.environ["OPENAI_API_KEY"] = openai_api_key
     
-    print(f"✅ OpenAI API key configured successfully (length: {len(openai_api_key)})")
     
     # Configure Supabase (no client needed here, just verifying)
     supabase_url = os.environ.get("SUPABASE_URL")

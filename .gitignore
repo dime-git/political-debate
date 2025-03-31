@@ -13,6 +13,8 @@ debate_agents/
 __pycache__/
 *.py[cod]
 *$py.class
+app/__pycache__/
+app/debate/__pycache__/
 .pytest_cache/
 .coverage
 htmlcov/

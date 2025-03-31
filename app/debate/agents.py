@@ -19,7 +19,7 @@ class DebateMessage(TypedDict):
 message_storage: list[DebateMessage] = []
 
 right_wing_agent = Agent(
-    model='gpt-4-turbo-preview',
+    model='gpt-4o',
     deps_type=str,
     result_type=str,
     result_retries=3,
@@ -32,7 +32,7 @@ right_wing_agent = Agent(
 )
 
 right_wing_researcher_agent = Agent(
-    model='gpt-4-turbo-preview',
+    model='gpt-4o',
     deps_type=str,
     result_type=str,
     result_retries=3,
@@ -66,7 +66,7 @@ async def get_right_wing_response(query: str) -> str:
     return result.data
 
 left_wing_agent = Agent(
-    model='gpt-4-turbo-preview',
+    model='gpt-4',
     deps_type=str,
     result_type=str,
     result_retries=3,
@@ -79,7 +79,7 @@ left_wing_agent = Agent(
 )
 
 left_wing_researcher_agent = Agent(
-    model='gpt-4-turbo-preview',
+    model='gpt-4',
     deps_type=str,
     result_type=str,
     result_retries=3,
