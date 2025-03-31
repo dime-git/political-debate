@@ -15,7 +15,7 @@ export interface DebateResponse {
   'Joe Biden thoughts 🧠: ': string;
 }
 
-// API URL from environment variable
+// API URL from environment variable - hardcoded for local development
 const apiUrl = 'http://localhost:8000';
 
 /**
@@ -34,10 +34,17 @@ export async function submitDebateQuestion(
     const url = `${apiUrl}/debate?${params.toString()}`;
     console.log(`Calling API at: ${url}`);
 
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      mode: 'cors', // Explicitly set CORS mode
+    });
 
     if (!response.ok) {
-      throw new Error(`API error: ${response.status}`);
+      throw new Error(`API error: ${response.status} ${response.statusText}`);
     }
 
     return response.json();
